@@ -1,6 +1,9 @@
 from graph import *
 import math
 
+t = 0
+v1 = 5
+
 windowSize(600, 400)
 canvasSize(600, 400)
 width, height = windowSize()
@@ -14,15 +17,33 @@ def branch(x, y, a, c1, c2):
         y1 = c+y
         point (x1, y1, -1)
 
+def oval(x, y, a, b, fi):
+    penSize (1)
+    penColor ("BLACK")
+    brushColor ("BLACK")
+    c = math.cos (fi)
+    d = math.sin (fi)
+    dots = []
+
+    for i in range (-a, a):
+        y1 = b * math.sqrt(1 - (i/a)**2)
+        dots.append ((i * c - y1 * d + x, i * d + y1 * c + y))
+    for i in range (a, -a, -1):
+        y1 = -b * math.sqrt(1 - (i/a)**2)
+        dots.append ((i * c - y1 * d + x, i * d + y1 * c + y))
+
+    polygon (dots)
+
+
 def ellipse(x, y, a, b, fi):
     penColor(0,100,0)
     c=math.cos(fi)
     d=math.sin(fi)
-    penSize(2)
+    penSize(10)
     
-    for i in range (-a,a):
+    for i in range (-a,a, 5):
         v = (b**2-(i*b/a)**2)**0.5
-        for j in range (-b,b):
+        for j in range (-b,b, 5):
     
             if  abs(j) <= v:
                 x1 = i*c+j*d
@@ -36,11 +57,11 @@ def ellipsee(x, y, a, b, fi):
     penColor('white')
     c=math.cos(fi)
     d=math.sin(fi)
-    penSize(2)
+    penSize(10)
     
-    for i in range (-a,a):
+    for i in range (-a,a, 5):
         v = (b**2-(i*b/a)**2)**0.5
-        for j in range (-b,b):
+        for j in range (-b,b, 5):
             
             if  abs(j) <= v:
                 x1 = i*c+j*d
@@ -54,11 +75,11 @@ def ellipseee(x, y, a, b, fi):
     penColor('black')
     c=math.cos(fi)
     d=math.sin(fi)
-    penSize(2)
+    penSize(10)
     
-    for i in range (-a,a):
+    for i in range (-a,a, 5):
         v = (b**2-(i*b/a)**2)**0.5
-        for j in range (-b,b):
+        for j in range (-b,b, 5):
             
             if  abs(j) <= v:
                 x1 = i*c+j*d
@@ -151,24 +172,31 @@ def panda(x,y,h):
     ellipseee(x+1.2*h,y+1.3*h,int(1.3*h),int(0.5*h), 60*3.14/180)
 
 
-brushColor(160, 82, 45)
-rectangle(0,0, 600,400)
-tree (270, 200, 20, 70, 100)
-tree (170, 230, 8, 50, 200)
-tree (70, 225, 12, 50, 250)
-tree (510, 200, 9, 60, 300)
+def Anime ():
 
-brushColor('white')
-penColor('white')
-panda(400,250,40)
-panda(230, 330, 20)
-#ellipse(500, 500, 50,10, 30)
-#branch(400, 400, 0.001, -90, 60)
+    global t
+    brushColor(160, 82, 45)
+    rectangle(0,0, 600,400)
+    tree (270, 200, 20, 70, 100)
+    tree (170, 230, 8, 50, 200)
+    tree (70, 225, 12, 50, 250)
+    tree (510, 200, 9, 60, 300)
 
-penColor('black')
-#penSize(1)
-#for i in range (100):
-#polygon([(0,i*20),(2000,i*20)])
-#polygon([(i*20,0),(i*20, 2000)])
+    brushColor('white')
+    penColor('white')
+    panda(400 - 6 * t, 250, 40)
+    panda(230, 330, 20)
+    #ellipse(500, 500, 50,10, 30)
+    #branch(400, 400, 0.001, -90, 60)
+
+    penColor('black')
+    #penSize(1)
+    #for i in range (100):
+    #polygon([(0,i*20),(2000,i*20)])
+    #polygon([(i*20,0),(i*20, 2000)])
+    t += 5
+
+#onTimer (Anime, 40)
+oval (100, 100, 30, 40, math.pi/4)
 
 run()
