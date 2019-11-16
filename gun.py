@@ -238,14 +238,22 @@ def new_game(event=''):
             for i in range (4):
                 if targets[i] != None:
                     x = Tcheck(targets)
+<<<<<<< HEAD
+=======
+                    if b.hittest(targets[i]) and x:
+                        targets[i] = None
+>>>>>>> e6fe123e538b48f6a6b2a2170dd025f784a23d56
                     if b.hittest(targets[i]) and not x:
                         targets[i] = None
                         canv.bind('<Button-1>', '')
                         canv.bind('<ButtonRelease-1>', '')
                         canv.itemconfig(screen1, text='Вы уничтожили цель за ' + str(bullet) + ' выстрелов')
+<<<<<<< HEAD
                     if b.hittest(targets[i]) and x:
                         targets[i] = None
 
+=======
+>>>>>>> e6fe123e538b48f6a6b2a2170dd025f784a23d56
 
         canv.update()
         time.sleep(0.03)
