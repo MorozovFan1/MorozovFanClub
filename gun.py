@@ -3,8 +3,6 @@ import tkinter as tk
 import math
 import time
 
-# print (dir(math))
-
 root = tk.Tk()
 fr = tk.Frame(root)
 root.geometry('800x600')
@@ -101,7 +99,7 @@ class gun():
         self.f2_power = 10
         self.f2_on = 0
         self.an = 1
-        self.id = canv.create_line(20,450,50,420,width=7) # FIXME: don't know how to set it...
+        self.id = canv.create_line(20,450,50,420,width=7)
 
     def fire2_start(self, event):
         self.f2_on = 1
@@ -149,27 +147,26 @@ class target():
     def __init__(self):
         self.points = 0
         self.live = 1
-        # FIXME: don't work!!! How to call this functions when object is created?
         self.id = canv.create_oval(0,0,0,0)
-        self.id_points = canv.create_text(30,30,text = self.points,font = '28')
+        #self.id_points = canv.create_text(30,30,text = self.points,font = '28')
         self.new_target()
 
     def new_target(self):
         """ Инициализация новой цели. """
         x = self.x = rnd(600, 780)
         y = self.y = rnd(300, 550)
-        r = self.r = rnd(2, 50)
+        r = self.r = rnd(20, 50)
         color = self.color = 'red'
         canv.coords(self.id, x-r, y-r, x+r, y+r)
         canv.itemconfig(self.id, fill=color)
-        self.vx = 5
-        self.vy = 5
+        self.vx = rnd(3, 10)
+        self.vy = rnd(3, 10)
 
     def hit(self, points=1):
         """Попадание шарика в цель."""
         canv.coords(self.id, -10, -10, -10, -10)
         self.points += points
-        canv.itemconfig(self.id_points, text=self.points)
+        #canv.itemconfig(self.id_points, text=self.points)
 
     def set_coords(self):
         canv.coords(
@@ -206,6 +203,7 @@ class target():
         canv.delete(self.id)
 
 def Tcheck (t):
+    """Проверка на наличие мячиков или целей в игре"""
     x = 0
     for i in range (len (t)):
         if t[i] != None:
@@ -214,10 +212,6 @@ def Tcheck (t):
         return 0
     else:
         return 1
-
-
-
-
 
 def new_game(event=''):
     global screen1, balls, bullet, t
@@ -260,7 +254,7 @@ def new_game(event=''):
         g1.targetting()
         g1.power_up()
     canv.itemconfig(screen1, text='')
-    canv.delete(g1)
+    canv.delete(g1.id)
     root.after(750, new_game)
 
 
