@@ -26,6 +26,7 @@ class ball():
         self.vx = 0
         self.vy = 0
         self.g = 1
+        self.lifetime = 5
         self.color = choice(['blue', 'green', 'red', 'brown'])
         self.id = canv.create_oval(
                 self.x - self.r,
@@ -58,6 +59,7 @@ class ball():
         else:
             self.vx = 0
             self.vy = 0
+            self.lifetime -= 1
 
         if self.x + self.r >= 800 and self.vx > 0:
             self.vx = -self.vx/2
@@ -75,11 +77,9 @@ class ball():
             self.vy = -self.vy/2
             self.vx = self.vx/2
 
-
         self.x += self.vx
         self.y += self.vy
         self.set_coords()
-
 
     def hittest(self, obj):
         """Функция проверяет сталкивалкивается ли данный обьект с целью, описываемой в обьекте obj.
@@ -93,6 +93,8 @@ class ball():
             return True
         return False
 
+    def __del__(self):
+        canv.delete(self.id)
 
 class gun():
     def __init__(self):
@@ -201,69 +203,67 @@ class target():
         self.set_coords()
 
     def __del__(self):
-        print("r")
+        canv.delete(self.id)
 
 def Tcheck (t):
+    x = 0
     for i in range (len (t)):
         if t[i] != None:
-            return 1
-    return 0
+            x += 1
+    if x == 0:
+        return 0
+    else:
+        return 1
 
-targets = [0] * 4
-for i in range (4):
-    targets[i] = target()
-screen1 = canv.create_text(400, 300, text='', font='28')
-g1 = gun()
-bullet = 0
-balls = []
+
+
 
 
 def new_game(event=''):
-    global gun, screen1, balls, bullet, t
-    for i in range (4):
-        targets[i].new_target()
+    global screen1, balls, bullet, t
+    targets_ammount = 4
+    targets = [0] * targets_ammount
+    for i in range(targets_ammount):
+        targets[i] = target()
+    screen1 = canv.create_text(400, 300, text='', font='28')
+    g1 = gun()
     bullet = 0
     balls = []
+    for i in range(targets_ammount):
+        targets[i].new_target()
     canv.bind('<Button-1>', g1.fire2_start)
     canv.bind('<ButtonRelease-1>', g1.fire2_end)
     canv.bind('<Motion>', g1.targetting)
 
-    z = 0.03
-    while Tcheck(targets) or balls:
+    while Tcheck(targets) or Tcheck(balls):
         for t in targets:
             if t != None:
                 t.move()
-        for b in balls:
-            b.move()
-            for i in range (4):
-                if targets[i] != None:
-                    x = Tcheck(targets)
-<<<<<<< HEAD
-=======
-                    if b.hittest(targets[i]) and x:
-                        targets[i] = None
->>>>>>> e6fe123e538b48f6a6b2a2170dd025f784a23d56
-                    if b.hittest(targets[i]) and not x:
-                        targets[i] = None
-                        canv.bind('<Button-1>', '')
-                        canv.bind('<ButtonRelease-1>', '')
-                        canv.itemconfig(screen1, text='Вы уничтожили цель за ' + str(bullet) + ' выстрелов')
-<<<<<<< HEAD
-                    if b.hittest(targets[i]) and x:
-                        targets[i] = None
-
-=======
->>>>>>> e6fe123e538b48f6a6b2a2170dd025f784a23d56
+        for num, b in enumerate(balls):
+            if b != None:
+                b.move()
+                for i in range(targets_ammount):
+                    if targets[i] != None:
+                        hittest_result = b.hittest(targets[i])
+                        x = Tcheck(targets)
+                        if hittest_result and x:
+                            targets[i] = None
+                        if Tcheck(targets) == 0:
+                            canv.bind('<Button-1>', '')
+                            canv.bind('<ButtonRelease-1>', '')
+                            canv.itemconfig(screen1, text='Вы уничтожили цель за ' + str(bullet) + ' выстрелов')
+                if balls[num].lifetime == 0:
+                    balls[num] = None
 
         canv.update()
         time.sleep(0.03)
         g1.targetting()
         g1.power_up()
     canv.itemconfig(screen1, text='')
-    canv.delete(gun)
+    canv.delete(g1)
     root.after(750, new_game)
 
 
 new_game()
 
-mainloop()
+root.mainloop()
